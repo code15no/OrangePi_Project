@@ -1,0 +1,8 @@
+/* 自定义 Markdown 引用块样式 */
+blockquote {
+  color: green !important;             /* 引用文字改成绿色 */
+  border-left: 4px solid #4CAF50 !important; /* 左边竖线绿色 */
+  padding-left: 12px !important;       /* 缩进美化 */
+  margin: 10px 0 !important;           /* 上下间距 */
+  background-color: #f9fff9 !important; /* 淡绿色背景，区分正文 */
+}
