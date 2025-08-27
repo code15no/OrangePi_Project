@@ -3,3 +3,7 @@
 3. https://universe.roboflow.com/computer-vision-project-ehipo/driver-face-detection-dzicg -wzt
 4. https://universe.roboflow.com/lbss-nxug9/-423-7l0fg -wzt
 5. https://universe.roboflow.com/lbss-nxug9/-4.23 -wzt
+6. https://www.kaggle.com/datasets/ismailnasri20/driver-drowsiness-dataset-ddd -zzy
+7. https://universe.roboflow.com/pal-qwkql/driver-drowsiness-sk3wg -zzy
+8. https://universe.roboflow.com/driver-monitoring-system-woxvc/driver-monitoring-system-v0mei -zzy
+9. https://www.kaggle.com/datasets/zeyad1mashhour/driver-inattention-detection-dataset -zzy
