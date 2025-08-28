@@ -7,3 +7,5 @@
 7. https://universe.roboflow.com/pal-qwkql/driver-drowsiness-sk3wg -zzy
 8. https://universe.roboflow.com/driver-monitoring-system-woxvc/driver-monitoring-system-v0mei -zzy
 9. https://www.kaggle.com/datasets/zeyad1mashhour/driver-inattention-detection-dataset -zzy
+10. https://www.kaggle.com/datasets/yasharjebraeily/drowsy-detection-dataset -ll
+11. https://www.kaggle.com/datasets/zeyad1mashhour/driver-inattention-detection-dataset -ll
