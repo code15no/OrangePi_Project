@@ -12,25 +12,25 @@
 
 1. 在任务栏的搜索框中输入“管理网络适配器设置”，并进入设置页面。
 
-   ![image-20250802003638546](C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250802003638546.png)
+   ![image-20250802003638546](https://github.com/code15no/OrangePi_Project/blob/main/docs/notes_images/image-20250802003638546.png)
 
    > 或者打开“设置”——“网络和Internet”——“高级网络设置”
 
 2. 找到当前的WLAN，编辑网络适配器属性，打开共享功能，并设置共享连接的网络适配器为“以太网”：
 
-   <img src="C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250802015538927.png" alt="image-20250802015538927" style="zoom:50%;" />
+   <img src="https://github.com/code15no/OrangePi_Project/blob/main/docs/notes_images/image-20250802015538927.png" alt="image-20250802015538927" style="zoom:50%;" />
 
-   <img src="C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250802015515164.png" alt="image-20250802015515164" style="zoom:50%;" />
+   <img src="https://github.com/code15no/OrangePi_Project/blob/main/docs/notes_images/image-20250802015515164.png" alt="image-20250802015515164" style="zoom:50%;" />
 
 3. 找到最下面的“以太网”，编辑网络适配器属性（下图中，找到“更多适配器选项”，点击“编辑”）：
 
-   ![image-20250802004358079](C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250802004358079.png)
+   ![image-20250802004358079](https://github.com/code15no/OrangePi_Project/blob/main/docs/notes_images/image-20250802004358079.png)
 
    找到下图所示的IPv4功能，双击打开：
 
-   <img src="C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250802004537022.png" alt="image-20250802004537022" style="zoom: 50%;" />
+   <img src="https://github.com/code15no/OrangePi_Project/blob/main/docs/notes_images/image-20250802004537022.png" alt="image-20250802004537022" style="zoom: 50%;" />
 
-   <img src="C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250802004714104.png" alt="image-20250802004714104" style="zoom:50%;" />
+   <img src="https://github.com/code15no/OrangePi_Project/blob/main/docs/notes_images/image-20250802004714104.png" alt="image-20250802004714104" style="zoom:50%;" />
 
    设置成上图这样，点“确定”保存。
 
@@ -188,9 +188,9 @@ Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkMa
 
 ### 使用`MobaXterm`
 
-<img src="C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250802015915272.png" alt="image-20250802015915272" style="zoom:50%;" />
+<img src="https://github.com/code15no/OrangePi_Project/blob/main/docs/notes_images/image-20250802015915272.png" alt="image-20250802015915272" style="zoom:50%;" />
 
-<img src="C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250802015943892.png" alt="image-20250802015943892" style="zoom:50%;" />
+<img src="https://github.com/code15no/OrangePi_Project/blob/main/docs/notes_images/image-20250802015943892.png" alt="image-20250802015943892" style="zoom:50%;" />
 
 测试是否能正常上网：
 
@@ -219,8 +219,8 @@ The document has moved
 
 输入`ssh HwHiAiUser@192.168.137.30 -p22`后，进入连接：
 
-![image-20250802020213850](C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250802020213850.png)
+![image-20250802020213850](https://github.com/code15no/OrangePi_Project/blob/main/docs/notes_images/image-20250802020213850.png)
 
-![image-20250802020302140](C:\Users\DELL\AppData\Roaming\Typora\typora-user-images\image-20250802020302140.png)
+![image-20250802020302140](https://github.com/code15no/OrangePi_Project/blob/main/docs/notes_images/image-20250802020302140.png)
 
 成功！
