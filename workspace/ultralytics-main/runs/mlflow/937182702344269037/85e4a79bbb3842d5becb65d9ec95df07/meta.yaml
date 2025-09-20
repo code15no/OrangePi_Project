@@ -1,0 +1,14 @@
+artifact_uri: file:E:/workspace/ultralytics-main/runs/mlflow/937182702344269037/85e4a79bbb3842d5becb65d9ec95df07/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '937182702344269037'
+lifecycle_stage: active
+run_id: 85e4a79bbb3842d5becb65d9ec95df07
+run_name: yolo_exp2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1758100890768
+status: 1
+tags: []
+user_id: '32076'
