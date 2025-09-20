@@ -1,0 +1,13 @@
+train: E:\workspace\ultralytics-main\datasets\train
+val: E:\workspace\ultralytics-main\datasets\valid
+test: E:\workspace\ultralytics-main\datasets\test
+
+nc: 6
+names: ['Attentive', 'Eye-Close', 'Eye-Open', 'Inattentive', 'Normal', 'Yawning']
+
+roboflow:
+  workspace: computer-vision-project-ehipo
+  project: driver-face-detection-dzicg
+  version: 2
+  license: Private
+  url: https://universe.roboflow.com/computer-vision-project-ehipo/driver-face-detection-dzicg/dataset/2
