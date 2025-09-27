@@ -1,0 +1,13 @@
+train: /root/yolov5-master/data/dataset/train/images
+val: /root/yolov5-master/data/dataset/valid/images
+test: /root/yolov5-matser/data/dataset/test/images
+
+nc: 6
+names: ['Attentive', 'Eye-Close', 'Eye-Open', 'Inattentive', 'Normal', 'Yawning']
+
+roboflow:
+  workspace: computer-vision-project-ehipo
+  project: driver-face-detection-dzicg
+  version: 2
+  license: Private
+  url: https://app.roboflow.com/computer-vision-project-ehipo/driver-face-detection-dzicg/2
