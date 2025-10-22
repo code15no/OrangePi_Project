@@ -20,3 +20,5 @@ rad.json
 *.flf
 #Test results file
 TestResults.xml
+#train zip
+workspace/yolov5-master_test.zip

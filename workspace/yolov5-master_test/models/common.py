@@ -19,6 +19,7 @@ import pandas as pd
 import requests
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from PIL import Image
 from torch.cuda import amp
 
@@ -244,6 +245,24 @@ class C3(nn.Module):
 
     def forward(self, x):
         """Performs forward propagation using concatenated outputs from two convolutions and a Bottleneck sequence."""
+        return self.cv3(torch.cat((self.m(self.cv1(x)), self.cv2(x)), 1))
+
+
+class C3CBAM(nn.Module):
+    # 改进的C3CBAM模块（集成CBAM）
+    def __init__(self, c1, c2, n=1, shortcut=True, g=1, e=0.5):
+        super().__init__()
+        c_ = int(c2 * e)
+        self.cv1 = Conv(c1, c_, 1, 1)
+        self.cv2 = Conv(c1, c_, 1, 1)
+        self.cv3 = Conv(2 * c_, c2, 1)
+        # 关键：在Bottleneck后添加CBAM（论文图2b结构）
+        self.m = nn.Sequential(
+            *[Bottleneck(c_, c_, shortcut, g, e=1.0) for _ in range(n)],
+            CBAM(c_)  # 对Bottleneck输出特征应用CBAM
+        )
+
+    def forward(self, x):
         return self.cv3(torch.cat((self.m(self.cv1(x)), self.cv2(x)), 1))
 
 
@@ -1121,3 +1140,89 @@ class Classify(nn.Module):
         if isinstance(x, list):
             x = torch.cat(x, 1)
         return self.linear(self.drop(self.pool(self.conv(x)).flatten(1)))
+
+
+class CBAM(nn.Module):
+    def __init__(self, c1, ratio=16):  # c1: 输入通道数，ratio: MLP降维系数
+        super(CBAM, self).__init__()
+        # 1. 通道注意力模块（Channel Attention）
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+        self.max_pool = nn.AdaptiveMaxPool2d(1)
+        # MLP：降维→激活→升维（论文公式1）
+        self.mlp = nn.Sequential(
+            nn.Conv2d(c1, c1 // ratio, 1, bias=False),
+            nn.ReLU(),
+            nn.Conv2d(c1 // ratio, c1, 1, bias=False)
+        )
+        self.sigmoid = nn.Sigmoid()
+
+        # 2. 空间注意力模块（Spatial Attention）
+        self.conv = nn.Conv2d(2, 1, kernel_size=7, padding=3, bias=False)  # 7×7卷积（论文公式2）
+
+    def forward(self, x):
+        # 通道注意力计算
+        avg_out = self.mlp(self.avg_pool(x))
+        max_out = self.mlp(self.max_pool(x))
+        channel_att = self.sigmoid(avg_out + max_out)
+        x = x * channel_att  # 通道权重加权
+
+        # 空间注意力计算
+        avg_pool = torch.mean(x, dim=1, keepdim=True)
+        max_pool, _ = torch.max(x, dim=1, keepdim=True)
+        spatial_att = self.sigmoid(self.conv(torch.cat([avg_pool, max_pool], dim=1)))
+        x = x * spatial_att  # 空间权重加权
+        return x
+
+# class BiFPNConv(nn.Module):
+#     # BiFPN中的卷积模块（含BN和ReLU）
+#     def __init__(self, c1, c2, k=3, s=1, p=1):
+#         super().__init__()
+#         self.conv = nn.Conv2d(c1, c2, k, s, p, bias=False)
+#         self.bn = nn.BatchNorm2d(c2)
+#         self.relu = nn.ReLU(inplace=True)
+#
+#     def forward(self, x):
+#         return self.relu(self.bn(self.conv(x)))
+class BiFPNConv(nn.Module):
+    def __init__(self, c1, c2, k=3, s=1, p=1):
+        super().__init__()
+        self.conv = GSConv(c1, c2, k, s, p)  # 原nn.Conv2d→GSConv
+        # 注：GSConv已包含BN和ReLU，故删除原BiFPNConv中的bn和relu
+    def forward(self, x):
+        return self.conv(x)
+
+class BiFPNFusion(nn.Module):
+    # BiFPN加权特征融合（论文公式3）
+    def __init__(self, c):
+        super().__init__()
+        self.w = nn.Parameter(torch.ones(2, dtype=torch.float32), requires_grad=True)  # 两个输入特征的权重
+        self.epsilon = 1e-4  # 避免分母为0
+        self.conv = BiFPNConv(c, c)  # 融合后卷积精炼
+
+    def forward(self, x1, x2):
+        # 加权融合：x1（上层特征，需上采样）、x2（下层特征，需下采样）
+        x1 = F.interpolate(x1, size=x2.shape[2:], mode='bilinear', align_corners=True)  # 上采样到x2尺寸
+        # 权重归一化：w_i / (sum(w_j) + epsilon)
+        w = torch.softmax(self.w, dim=0)
+        fused = w[0] * x1 + w[1] * x2
+        return self.conv(fused)
+
+class GSConv(nn.Module):
+    # GSConv：深度可分离卷积（DSC）+ 标准卷积（SC）+ 通道Shuffle（论文C部分）
+    def __init__(self, c1, c2, k=3, s=1, p=1, g=1):
+        super().__init__()
+        # 1. 深度可分离卷积（DSC）：降低计算量
+        self.dsc = nn.Conv2d(c1, c1, k, s, p, groups=c1, bias=False)  # 分组数=输入通道数（深度卷积）
+        self.bn1 = nn.BatchNorm2d(c1)
+        # 2. 标准卷积（SC）：增强通道交互
+        self.sc = nn.Conv2d(c1, c2, 1, 1, 0, bias=False)  # 1×1卷积升/降维
+        self.bn2 = nn.BatchNorm2d(c2)
+        self.relu = nn.ReLU(inplace=True)
+        # 3. 通道Shuffle：优化通道信息分布（参考ShuffleNet）
+        self.shuffle = nn.ChannelShuffle(groups=min(c2, 8))  # 分组数≤8，避免过度打乱
+
+    def forward(self, x):
+        x = self.relu(self.bn1(self.dsc(x)))  # DSC+BN+ReLU
+        x = self.relu(self.bn2(self.sc(x)))   # SC+BN+ReLU
+        x = self.shuffle(x)                   # 通道Shuffle
+        return x
